@@ -209,7 +209,6 @@ function run() {
 		out.warn(`No descriptions for your ${runner} scripts found`);
 	}
 
-
 	const reducedScripts = Object.values(Object.keys(scripts).reduce((acc, curr) => {
 		const subInfo = SUB_REGEX.exec(curr);
 		if (!subInfo) {
@@ -221,7 +220,6 @@ function run() {
 		}
 		return acc;
 	}, {}));
-
 
 	const longestScriptName = reducedScripts.reduce((mainAcc, mainCurr) => {
 		if (!mainCurr[0]) mainCurr.shift();

@@ -1,6 +1,6 @@
 {
-  "name": "ntl-custom",
-  "version": "5.0.0",
+  "name": "ntl",
+  "version": "6.0.0",
   "description": "Interactive cli tool to list and run package scripts",
   "repository": "ruyadorno/ntl",
   "author": {
