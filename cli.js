@@ -223,14 +223,14 @@ function run() {
 	}, {}));
 
 
-	const longestScriptName2 = reducedScripts.reduce((mainAcc, mainCurr) => {
+	const longestScriptName = reducedScripts.reduce((mainAcc, mainCurr) => {
 		if (!mainCurr[0]) mainCurr.shift();
 		else mainCurr = mainCurr.map(key => key.replace(SUB_REGEX, SUB_OPTION_PRE_STR))
 		return mainCurr.reduce((acc, curr) => acc > curr.length ? acc : curr.length, mainAcc)
 	});
 
 	const getLongName = (name, message = "", pad = undefined) =>
-		`${name.padEnd(longestScriptName2)} › ${green(message)}`;
+		`${name.padEnd(longestScriptName)} › ${green(message)}`;
 
 	// defines the items that will be printed to the user
 	const input = reducedScripts.map(values => {
