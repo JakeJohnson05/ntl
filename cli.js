@@ -11,13 +11,15 @@ const ipt = require("ipt");
 const out = require("simple-output");
 const readPkg = require("read-pkg");
 const Cache = require("lru-cache-fs");
+const { green } = require("chalk");
 
 const sep = os.EOL;
 const defaultRunner = "npm";
+const SUB_REGEX = /^\w+(?=:\w)/;
+const SUB_OPTION_PRE_STR = ' _';
 const { argv } = yargs(getMainArgs())
-	.usage(
-		"Usage:\n  ntl [<path>]             Build an interactive interface and run any script"
-	)
+	.usage("Usage:")
+	.usage("  ntl [<path>]             Build an interactive interface and run any script")
 	.usage("  nt [<path>]              Rerun last executed script")
 	.alias("a", "all")
 	.describe("a", "Includes pre and post scripts on the list")
@@ -29,6 +31,8 @@ const { argv } = yargs(getMainArgs())
 	.describe("d", "Displays the descriptions of each script")
 	.alias("o", "descriptions-only")
 	.describe("o", "Limits output to scripts with a description")
+	.alias("w", "suppress-desc-warn")
+	.describe("w", "Suppress warning if descriptions not found")
 	.help("h")
 	.alias("h", "help")
 	.describe("h", "Shows this help message")
@@ -43,7 +47,7 @@ const { argv } = yargs(getMainArgs())
 	.alias("v", "version")
 	.describe("rerun", "Repeat last executed script")
 	.alias("r", "rerun")
-	.boolean(["a", "A", "D", "d", "o", "h", "i", "m", "v", "r", "no-rerun-cache"])
+	.boolean(["a", "A", "D", "d", "o", "h", "i", "m", "v", "r", "w", "no-rerun-cache"])
 	.number(["s"])
 	.array(["e"])
 	.string(["rerun-cache-dir", "rerun-cache-name"])
@@ -128,8 +132,7 @@ function retrieveCache() {
 
 	if (!cache) {
 		cache = new Cache({
-			cacheName:
-				rerunCacheName || process.env.NTL_RERUN_CACHE_NAME || "ntl-rerun-cache",
+			cacheName: rerunCacheName || process.env.NTL_RERUN_CACHE_NAME || "ntl-rerun-cache",
 			cwd: rerunCacheDir || process.env.NTL_RERUN_CACHE_DIR,
 			max: parseInt(process.env.NTL_RERUN_CACHE_MAX, 10) || 10
 		});
@@ -201,60 +204,68 @@ function executeCommands(keys) {
 
 function run() {
 	const descriptionsKeys = Object.keys(descriptions);
-	const hasDescriptions =
-		descriptionsKeys.length > 0 && descriptionsKeys.some(key => scripts[key]);
-	const shouldWarnNoDescriptions = argv.descriptions && !hasDescriptions;
-	if (shouldWarnNoDescriptions) {
+	const hasDescriptions = descriptionsKeys.length > 0 && descriptionsKeys.some(key => scripts[key]);
+	if (argv.descriptions && !argv.suppressDescWarn && !hasDescriptions) {
 		out.warn(`No descriptions for your ${runner} scripts found`);
 	}
 
-	const longestScriptName = scriptKeys.reduce(
-		(acc, curr) => (curr.length > acc.length ? curr : acc),
-		""
-	).length;
 
-	const getLongName = (name, message = "", pad) =>
-		`${name.padStart(longestScriptName)} › ${message}`;
+	const reducedScripts = Object.values(Object.keys(scripts).reduce((acc, curr) => {
+		const subInfo = SUB_REGEX.exec(curr);
+		if (!subInfo) {
+			if (!acc[curr]) acc[curr] = [];
+			acc[curr][0] = curr;
+		} else {
+			if (!acc[subInfo[0]]) acc[subInfo[0]] = [null];
+			acc[subInfo[0]].push(curr);
+		}
+		return acc;
+	}, {}));
+
+
+	const longestScriptName2 = reducedScripts.reduce((mainAcc, mainCurr) => {
+		if (!mainCurr[0]) mainCurr.shift();
+		else mainCurr = mainCurr.map(key => key.replace(SUB_REGEX, SUB_OPTION_PRE_STR))
+		return mainCurr.reduce((acc, curr) => acc > curr.length ? acc : curr.length, mainAcc)
+	});
+
+	const getLongName = (name, message = "", pad = undefined) =>
+		`${name.padEnd(longestScriptName2)} › ${green(message)}`;
 
 	// defines the items that will be printed to the user
-	const input = scriptKeys
-		.map(key => ({
-			name:
-				argv.info || argv.descriptions
-					? getLongName(
-							key,
-							argv.descriptions && descriptions[key]
-								? descriptions[key]
-								: scripts[key]
-					  )
-					: hasDescriptions
-					? getLongName(key, descriptions[key])
-					: key,
-			value: key
-		}))
-		.filter(
-			// filter out prefixed scripts
-			item =>
-				argv.all
-					? true
-					: ["pre", "post"].every(prefix => !item.value.startsWith(prefix))
-		)
-		.filter(
-			// filter out scripts without a description if --descriptions-only option
-			item => (argv.descriptionsOnly ? descriptions[item.value] : true)
-		)
-		.filter(
-			// filter excluded scripts
-			item =>
-				!argv.exclude ||
-				!argv.exclude.some(e =>
-					new RegExp(e + (e.includes("*") ? "" : "$"), "i").test(item.value)
-				)
-		);
+	const input = reducedScripts.map(values => {
+		const replacement = values[0] ? SUB_OPTION_PRE_STR : '\$&';
+		if (!values[0]) values.shift();
+		return values.map(key => ({
+			value: key,
+			name: argv.info || argv.descriptions ? getLongName(
+				key.replace(SUB_REGEX, replacement),
+				argv.descriptions && descriptions[key] ? descriptions[key] : scripts[key]
+			) : hasDescriptions ? getLongName(
+				key.replace(SUB_REGEX, replacement),
+				descriptions[key]) : key
+		}));
+	}).flat().filter(
+		// filter out prefixed scripts
+		item =>
+			argv.all
+				? true
+				: ["pre", "post"].every(prefix => !item.value.startsWith(prefix))
+	).filter(
+		// filter out scripts without a description if --descriptions-only option
+		item => (argv.descriptionsOnly ? descriptions[item.value] : true)
+	).filter(
+		// filter excluded scripts
+		item =>
+			!argv.exclude ||
+			!argv.exclude.some(e =>
+				new RegExp(e + (e.includes("*") ? "" : "$"), "i").test(item.value)
+			)
+	);
 
 	const message = `Select a task to run${
 		runner !== defaultRunner ? ` (using ${runner})` : ""
-	}:`;
+		}:`;
 
 	if (hasCachedTasks()) {
 		return;
