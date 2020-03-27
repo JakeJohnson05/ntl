@@ -6,6 +6,7 @@ const os = require("os");
 const path = require("path");
 const { execSync } = require("child_process");
 
+require('inquirer-exit-listener');
 const yargs = require("yargs/yargs");
 const ipt = require("ipt");
 const out = require("simple-output");
@@ -18,9 +19,13 @@ const defaultRunner = "npm";
 const SUB_REGEX = /^\w+(?=:\w)/;
 const SUB_OPTION_PRE_STR = ' _';
 const { argv } = yargs(getMainArgs())
+	.scriptName('ntl')
+	.wrap(Math.min(100, yargs(getMainArgs()).terminalWidth()))
 	.usage("Usage:")
-	.usage("  ntl [<path>]             Build an interactive interface and run any script")
-	.usage("  nt [<path>]              Rerun last executed script")
+	.usage("  $ ntl [path] [options] [-- <args>...]")
+	.usage("      Build an interactive interface and run any script")
+	.usage("  $ nt")
+	.usage("      Rerun last executed script")
 	.alias("a", "all")
 	.describe("a", "Includes pre and post scripts on the list")
 	.alias("A", "autocomplete")
@@ -74,13 +79,6 @@ const scriptKeys = Object.keys(scripts || {});
 const noScriptsFound = !scripts || scriptKeys.length < 1;
 const avoidCache = noRerunCache || process.env.NTL_NO_RERUN_CACHE;
 const shouldRerun = !avoidCache && (rerun || process.env.NTL_RERUN);
-
-// Exits program execution on ESC
-process.stdin.on("keypress", (ch, key) => {
-	if (key && key.name === "escape") {
-		process.exit(0);
-	}
-});
 
 function error(e, msg) {
 	out.error(argv.debug ? e : msg);
@@ -195,6 +193,7 @@ function getDefaultTask() {
 
 function executeCommands(keys) {
 	keys.forEach(key => {
+		console.log('HERE!\n', runner, '\n', key, '\n', getTrailingOptions(), '\n');
 		execSync(`${runner} run ${key}${getTrailingOptions()}`, {
 			cwd,
 			stdio: [process.stdin, process.stdout, process.stderr]

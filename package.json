@@ -64,6 +64,7 @@
   ],
   "dependencies": {
     "chalk": "^3.0.0",
+    "inquirer-exit-listener": "github:JakeJohnson05/InquirerExitListener",
     "ipt": "^3.0.1",
     "lru-cache-fs": "^2.0.1",
     "read-pkg": "^5.2.0",
