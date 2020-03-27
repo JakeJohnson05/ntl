@@ -1,22 +1,93 @@
-.TH "ntl" "1" "November 2019" "5.0.0" "Node Task List"
-.SH NAME
-ntl \- manual page for ntl 5.0.0
+<div align="center">
+    <br>
+    <br>
+    <br>
+    <img alt="ntl" width="300" src="https://ruyadorno\.github\.io/svg\-demos/ntl/logo\.min\.svg">
+    <br>
+    <br>
+    <br>
+</div>
+
+.TH "NODE" "" "March 2020" "$npm_package_version" "Node Task List"
+.SH "NAME"
+\fBNode\fR
 .P
+NPM version \fIhttps://badge\.fury\.io/js/ntl\.svg\fR \fIhttps://npmjs\.org/package/ntl\fR
+Build Status \fIhttps://travis\-ci\.org/ruyadorno/ntl\.svg?branch=master\fR \fIhttps://travis\-ci\.org/ruyadorno/ntl\fR
+Coverage Status \fIhttps://coveralls\.io/repos/github/ruyadorno/ntl/badge\.svg?branch=master\fR \fIhttps://coveralls\.io/github/ruyadorno/ntl?branch=master\fR
+License \fIhttp://img\.shields\.io/badge/license\-MIT\-blue\.svg?style=flat\fR \fIhttps://raw\.githubusercontent\.com/ruyadorno/ipt/master/LICENSE\fR
+Join the chat at https://gitter\.im/ipipeto/Lobby \fIhttps://badges\.gitter\.im/Join%20Chat\.svg\fR \fIhttps://gitter\.im/ipipeto/Lobby\fR
 .P
 Interactive cli tool that lists and run \fBpackage\.json\fP scripts\.
 .QP
 .P
 An iPipeTo \fIhttps://github\.com/ruyadorno/ipt\fR workflow
 
+.
+<br />
+
+.SH Table of Contents
+.RS 0
+.IP \(bu 2
+Install \fI#arrow_down\-install\fR
+.IP \(bu 2
+Usage \fI#mag_right\-usage\fR
+.IP \(bu 2
+Features \fI#heart_eyes\-features\fR
+.IP \(bu 2
+Customize \fI#books\-customize\fR
+.RS
+.IP \(bu 2
+Custom runner \fI#custom\-runner\fR
+.IP \(bu 2
+Using task descriptions \fI#using\-task\-descriptions\fR
+.IP \(bu 2
+Displaying task contents \fI#displaying\-task\-contents\fR
+.IP \(bu 2
+Exclude tasks from UI \fI#exclude\-tasks\-from\-ui\fR
+.IP \(bu 2
+Exclude tasks with missing descriptions \fI#exclude\-tasks\-with\-missing\-descriptions\fR
+.IP \(bu 2
+Customize cache \fI#customize\-cache\fR
+.IP \(bu 2
+UI Size \fI#ui\-size\fR
+
 .RE
-.SH INSTALL
+.IP \(bu 2
+Repeat the last ran task \fI#arrows_counterclockwise\-repeat\-the\-last\-ran\-task\fR
+.IP \(bu 2
+Run multiple tasks \fI#m\-run\-multiple\-tasks\fR
+.IP \(bu 2
+Run in autocomplete or fuzzy search mode \fI#fast_forward\-run\-in\-autocomplete\-or\-fuzzy\-search\-mode\fR
+.IP \(bu 2
+Tips \fI#white_check_mark\-tips\fR
+.RS
+.IP \(bu 2
+ntl as default task \fI#ntl\-as\-default\-task\fR
+.IP \(bu 2
+Exclude scripts \fI#exclude\-scripts\fR
+.IP \(bu 2
+Included command aliases \fI#included\-command\-aliases\fR
+
+.RE
+.IP \(bu 2
+Help \fI#information_source\-help\fR
+.IP \(bu 2
+License \fI#license\fR
+
+.RE
+<br />
+
+.SH :arrow_down: Install
 .P
 .RS 2
 .nf
-npm install \-g ntl
+$ npm install \-g ntl
 .fi
 .RE
-.SH USAGE
+<br />
+
+.SH :mag_right: Usage
 .P
 Navigate to any folder containing a \fBpackage\.json\fP file (usually a Node\.js project) that has configured \fBscripts\fR, then just use the ntl command:
 .P
@@ -33,8 +104,16 @@ You can also specify a path to a project folder containing a \fBpackage\.json\fP
 ntl \./my\-node\-project
 .fi
 .RE
+<br />
+<br />
 
-.SH FEATURES
+<p align="center">
+<img alt="demo animation" width="540" src="https://ruyadorno\.github\.io/svg\-demos/ntl/examples/intro\.svg" />
+</p>
+
+<br />
+
+.SH :heart_eyes: Features
 .RS 0
 .IP \(bu 2
 Interactive interface that lists all \fBpackage\.json\fP scripts
@@ -54,7 +133,9 @@ Run multiple tasks (can also easily repeat multiple ran tasks)
 Customize rerun cache options
 
 .RE
-.SH CUSTOMIZE
+<br />
+
+.SH :books: Customize
 .SS Custom runner
 .P
 By default \fBNode Task List\fR tries to use npm \fIhttps://github\.com/npm/cli/\fR to run the configured \fBscript\fP tasks\. In case you want to use a custom runner (e\.g: \fByarn\fP or \fBpnpm\fP) you can configure \fBntl\fR to use whatever runner you prefer\.
@@ -76,7 +157,7 @@ NTL_RUNNER=yarn ntl
 .fi
 .RE
 .P
-You can also define a \fBrunner\fP in a per\-project basis using the \fBntl\fP configuration of your \fBpackage\.json\fP, e\.g:
+:heavy_exclamation_mark: You can also define a \fBrunner\fP in a per\-project basis using the \fBntl\fP configuration of your \fBpackage\.json\fP, e\.g:
 .P
 .RS 2
 .nf
@@ -89,9 +170,11 @@ You can also define a \fBrunner\fP in a per\-project basis using the \fBntl\fP c
 }
 .fi
 .RE
+<br />
+
 .SS Using task descriptions
 .P
-You can define descriptions for your tasks in your \fBpackage\.json\fP file by defining a \fBntl\fP section, e\.g:
+:memo: You can define descriptions for your tasks in your \fBpackage\.json\fP file by defining a \fBntl\fP section, e\.g:
 .P
 .RS 2
 .nf
@@ -115,24 +198,37 @@ You can define descriptions for your tasks in your \fBpackage\.json\fP file by d
 .RE
 .P
 These descriptions will be shown anytime you run \fBntl\fP\|\.
+<br />
+
 .SS Displaying task contents
 .P
 Use the \fB\-\-info\fP or simply \fB\-i\fP option in order to display the contents of each script task, like:
 .P
 .RS 2
 .nf
-ntl -i
+$ ntl \-i
+⬢  Node Task List
+? Select a task to run: (Use arrow keys)
+❯ generate\-manual › maked\-man README\.md > man/man1/ntl\.1
+          pretest › eslint cli\.js rerun\.js test
+             test › cross\-env NTL_NO_RERUN_CACHE=1 tap
 .fi
 .RE
 .P
 Task contents will also be shown when using the \fB\-\-descriptions\fP option and no description is available for a given item\.
+<br />
+
 .SS Exclude tasks from UI
 .P
 You can define a list of scripts to be excluded from the interactive menu using the \fB\-\-exclude\fP option:
 .P
 .RS 2
 .nf
-ntl \-e coverall tasks
+$ ntl \-e coverall tasks
+⬢  Node Task List
+? Select a task to run: (Use arrow keys)
+❯ test
+  test:watch
 .fi
 .RE
 .P
@@ -140,12 +236,20 @@ You can also use a wildcard character to exclude multiple scripts:
 .P
 .RS 2
 .nf
-ntl \-e "test*"
+$ ntl \-e "test*"
+⬢  Node Task List
+? Select a task to run: (Use arrow keys)
+❯ coveralls
+  tasks
 .fi
 .RE
+<br />
+
 .SS Exclude tasks with missing descriptions
 .P
 You can also filter out items that doesn't have a description using the \fB\-\-descriptions\-only\fP or \fB\-o\fP option\.
+<br />
+
 .SS Customize cache
 .P
 \fBntl\fR uses a cache system that stores the last ran command for each project in order to make it easier for users to repeat it\. Given its importance, the following environment variables are available in order to customize its location and size:
@@ -181,53 +285,96 @@ The cache can also be customized through command line options:
 \fB\-\-no\-rerun\-cache\fP: Avoids the cache system completely
 
 .RE
+<br />
+
 .SS UI Size
 .P
 You can increase/reduce the size of the presented UI list using the \fB\-\-size\fP or \fB\-s\fP option\. In this example we just increased the size of the list to show up to 12 items at once:
 .P
 .RS 2
 .nf
-ntl \-s 12
+$ ntl \-s 12
+⬢  Node Task List
+? Select a task to run:
+❯ build
+  generate\-manual
+  hello
+  bomdia
+  bonjour
+  test
+  test:dev
+  test:ci
+  test:integration
+  test:unit
+  test:e2e
+  start
 .fi
 .RE
 .P
 The default size value is 7 items\.
-.SH REPEAT THE LAST RAN TASK
+<br />
+
+.SH :arrows_counterclockwise: Repeat the last ran task
 .P
 \fBntl\fR provides many options to make it easier to rerun the last task, either through having it selected as default option the next time you run the \fBntl\fP command, or by using one of the following:
 .RS 0
 .IP \(bu 2
-\fBThe ultra convenient way\fR: \fBnt\fP command shorthand (You should think of \fBnt\fP as: "ok, just run the last node task", in contrast to \fBntl\fP which should be interpreted as: "ok, give me the node task list again") in case no previous task is available, running \fBnt\fP will behave exactly as \fBntl\fP
+\fBThe ultra convenient way\fR: \fBnt\fP command shorthand :sunglasses: (You should think of \fBnt\fP as: "ok, just run the last node task", in contrast to \fBntl\fP which should be interpreted as: "ok, give me the node task list again") in case no previous task is available, running \fBnt\fP will behave exactly as \fBntl\fP
 .IP \(bu 2
 Using a \fB\-\-rerun\fP or \fB\-r\fP flag, e\.g: \fBntl \-r\fP
 .IP \(bu 2
 Prepending the \fBNTL_RERUN\fP env variable, e\.g: \fBNTL_RERUN=true ntl\fP
 
 .RE
+<p align="center">
+<img alt="demo animation showing how to rerun a script using the nt command shorthand" width="540" src="https://ruyadorno\.github\.io/svg\-demos/ntl/examples/option\-rerun\.svg" />
+</p>
 
-.SH RUN MULTIPLE TASKS
+<br />
+
+.SH :m: Run multiple tasks
 .P
 Using the \fB\-\-multiple\fP or \fB\-m\fP option, the interface becomes a checkbox\-based list that allows you to select multiple tasks and run them in serial\.
 .P
 .RS 2
 .nf
-ntl \-m
+$ ntl \-m
+⬢  Node Task List
+? Select a task to run:
+ ◯ start
+ ◉ test
+❯◉ test:ci
 .fi
 .RE
+<p align="center">
+<img alt="demo animation showing how to use \-m to have a checkbox interface allowing for selection of multiple tasks to be ran in serial" width="540" src="https://ruyadorno\.github\.io/svg\-demos/ntl/examples/option\-multiple\.svg" />
+</p>
 
 .P
 Better yet, combine that with the \fBrerun\fR feature and you can repeat multiple tasks using the \fBnt\fP command\.
-.SH RUN IN AUTOCOMPLETE OR FUZZY SEARCH MODE
+<br />
+
+.SH :fast_forward: Run in autocomplete or fuzzy search mode
 .P
 Use \fB\-\-autocomplete\fP or \fB\-A\fP option in order to use an interface variation that allows you to type the name of the task instead of browsing through an arrow\-based menu\. This mode can be very helpful when managing a long list of tasks\.
 .P
 .RS 2
 .nf
-ntl \-A
+$ ntl \-A
+⬢  Node Task List
+? Select a task to run: t
+❯ pretest
+  test
+  start
 .fi
 .RE
+<p align="center">
+<img alt="demo animation showing how to use \-m to have a checkbox interface allowing for selection of multiple tasks to be ran in serial" width="540" src="https://ruyadorno\.github\.io/svg\-demos/ntl/examples/option\-autocomplete\.svg" />
+</p>
 
-.SH TIPS
+<br />
+
+.SH :white_check_mark: Tips
 .SS ntl as default task
 .P
 You can define \fBntl\fP as a dev dependency and one of the tasks of your project, specially \fBstart\fP \- so whenever someone runs \fBnpm start\fP or \fByarn start\fP they get the convenient \fBntl\fR interface\. Like in the following \fBpackage\.json\fP example:
@@ -276,7 +423,9 @@ You can also define a task that invokes \fBntl\fP while excluding other tasks, e
 \fBnodetask\fP Rerun last script longhand
 
 .RE
-.SH HELP
+<br />
+
+.SH :information_source: Help
 .P
 Still feel like you could use some \fB\-\-help\fP ?
 .P
@@ -306,7 +455,9 @@ Options:
 Visit https://github\.com/ruyadorno/ntl for more info
 .fi
 .RE
-.SH LICENSE
+<br />
+
+.SH License
 .P
 MIT \fILICENSE\fR © 2019 Ruy Adorno \fIhttp://ruyadorno\.com\fR
 

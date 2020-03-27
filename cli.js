@@ -193,7 +193,6 @@ function getDefaultTask() {
 
 function executeCommands(keys) {
 	keys.forEach(key => {
-		console.log('HERE!\n', runner, '\n', key, '\n', getTrailingOptions(), '\n');
 		execSync(`${runner} run ${key}${getTrailingOptions()}`, {
 			cwd,
 			stdio: [process.stdin, process.stdout, process.stderr]
