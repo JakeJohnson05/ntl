@@ -225,7 +225,8 @@ function run() {
 		return mainCurr.reduce((acc, curr) => acc > curr.length ? acc : curr.length, mainAcc)
 	});
 
-	const getLongName = (name, message = "", pad = undefined) => `${name.padEnd(longestScriptName)} › ${green(message)}`;
+	const getLongName = (name, message = "", pad = undefined) => `
+		${name.padEnd(longestScriptName)} › ${green(message)}`;
 
 	// defines the items that will be printed to the user
 	const input = reducedScripts.map(values => {
@@ -242,7 +243,10 @@ function run() {
 		}));
 	}).flat().filter(
 		// filter out prefixed scripts
-		item => argv.all ? true : ["pre", "post"].every(prefix => !item.value.startsWith(prefix))
+		item =>
+			argv.all
+				? true
+				: ["pre", "post"].every(prefix => !item.value.startsWith(prefix))
 	).filter(
 		// filter out scripts without a description if --descriptions-only option
 		item => (argv.descriptionsOnly ? descriptions[item.value] : true)
